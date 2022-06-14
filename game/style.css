@@ -1,0 +1,222 @@
+/* Font imports */
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz@8..144&display=swap');
+h1 {
+  font-family: Ubuntu;
+}
+body {
+  font-family:ubuntu;
+}
+.upg {
+  font-family: "Poppins";
+  font-weight: bolder;
+  border: none;
+  background: #0000d6;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 5px 5px 5px 5px;
+}
+
+#cash {
+  position: fixed;
+  width: fit-content;
+  background-repeat:no-repeat;
+  text-align: center;
+  overflow: hidden;
+  color: black ;
+  text-overflow: ellipsis;
+  font-weight: bold;
+  font-family: Archivo;
+  left: 10px;
+  top: 90px;
+}
+
+#pickaxe {
+  position: fixed;
+  top:200px;
+  left:18%;
+  height:120px;
+
+}
+@keyframes swing {
+  0% {
+    transform: rotate(70deg);
+    left:15%;
+    top:210px;
+  }
+  50% {
+    transform: rotate(0deg);
+    top:150px;
+    left:14%;
+    }
+
+  100% {
+    transform: rotate(70deg);
+    left:15%;
+    top:210px;
+  }
+}
+#ore {
+  position: absolute;
+  left:260px;
+  top:200px;
+}
+
+
+.running {
+  animation-name:swing;
+  animation-duration:2.5s;
+  animation-iteration-count: infinite;
+  transform:rotate(70deg);
+}
+.not-running {
+  animation-name: none;
+}
+@keyframes none {
+  0% {
+
+  }
+  100% {
+
+  }
+}
+#ugp1-background {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  opacity: .50;
+  -webkit-opacity: .5;
+  -moz-opacity: .5;
+  filter: alpha(opacity=50);
+  z-index: 1000;
+}
+
+#ugp1-content {
+  font-family:"Roboto Flex";
+  background-color: white;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  box-shadow: 0 0 20px 0 #222;
+  -webkit-box-shadow: 0 0 20px 0 #222;
+  -moz-box-shadow: 0 0 20px 0 #222;
+  display: none;
+  height: 500px;
+  left: 50%;
+  margin: -120px 0 0 -160px;
+  padding: 10px;
+  position: fixed;
+  top: 30%;
+  width: 800px;
+  z-index: 1000;
+  overflow-x: hidden;
+  overflow-y: auto;
+  text-align:justify;
+  -webkit-animation-name: animate__lightSpeedInRight;
+  -webkit-animation-duration: 0.4s;
+  animation-name: lightSpeedInRight;
+  animation-duration: 0.4s
+}
+
+#ugp1-background.active, #ugp1-content.active {
+  display: block;
+}
+#up1-background.active, #up1-content.active {
+  display: block;
+
+}
+#ugp1-close {
+  right:20px;
+}
+#settingsbtn {
+  border:none;
+  background:none;
+  position: absolute;
+  right:0;
+  bottom:0;
+}
+#ap #irp #gp #bgp {
+  display:inline;
+}
+#up1-background {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  opacity: .50;
+  -webkit-opacity: .5;
+  -moz-opacity: .5;
+  filter: alpha(opacity=50);
+  z-index: 1000;
+}
+
+#up1-content {
+  font-family:"Roboto Flex";
+  background-color: white;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  box-shadow: 0 0 20px 0 #222;
+  -webkit-box-shadow: 0 0 20px 0 #222;
+  -moz-box-shadow: 0 0 20px 0 #222;
+  display: none;
+  height: 500px;
+  left: 50%;
+  margin: -120px 0 0 -160px;
+  padding: 10px;
+  position: fixed;
+  top: 30%;
+  width: 800px;
+  z-index: 1000;
+  overflow-x: hidden;
+  overflow-y: auto;
+  text-align:justify;
+  -webkit-animation-name: flipInY;
+  -webkit-animation-duration: 0.4s;
+  animation-name: flipInY;
+  animation-duration: 0.4s
+}
+
+.active {
+  display: block;
+}
+#up1-close {
+  right:20px;
+}
+#plusamt {
+  top:250px;
+  position: absolute;
+  left:34%;
+}
+@keyframes animatetop {
+  from {top:-300px; opacity:0}
+  to {top:0; opacity:1}
+}
+
+
+.cave {
+  background-image: url(./assets/cavebg.png);
+  background-size: 1000px;
+}
+.paris {
+  color:black;
+}
+#update {
+  color:white;
+    font-family:Archivo;
+}

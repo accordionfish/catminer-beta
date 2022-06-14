@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+    <script src="https://cdn.jsdelivr.net/npm/mousetrap@1.6.5/mousetrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.sandbox.google.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Miner</title>
+</head>
+<body>
+<div id="up1-background"></div>
+<div id="up1-content">New pick availible yey<div id="up1-close">&times;</div></div>
+<h1 id="title">Cat Miner</h1>
+<button id="ugp1-launcher" class="upg" style="position:fixed;left:80%;top:10px;font-family:ubuntu;font-weight:bolder">Pickaxe Shop</button>
+<div id="cash">loading...</div>
+<div id="plusamt">loading..</div>
+<br><br><br><br><br>
+<div ><img src="./assets/cat1.png" style="  transform: scaleX(-1); height:300px;" id="cat">
+    <div id="ore"><img src="./assets/coal.png" height="160px"></div>
+    <img src="./assets/pickaxe.png" id="pickaxe" class="running"></div>
+<div id="ugp1-background"></div>
+<div id="ugp1-content">
+    <span id="ugp1-close" style="cursor:pointer; position:absolute;">&times;</span>
+    <div><p style="top:20%; position: absolute; left:30%"><b>Copper Pickaxe - Free</b><br>The first pickaxe Cat Miner made. He bought some copper and stuck it to a stick.<br><button style="left:100;position: absolute;"class="buy" disabled>OWNED</button></p>
+        <img src="./assets/pickaxe.png" id="pickaxe-inshop" style="position: absolute;top:20%; height:70px;"></div>
+        <p style="top:100%; position: absolute; left:30%;display:none"id="aptxt"><b> Auto Pickaxe - <img src="./assets/catcoin1.png" height="15px">100,000,000</b><br>Makes 10 trillion catcoin per second. Legend says that cat miner didn't even make this pickaxe, but a mere robot did...<button class="buy" id="aip-btn" onclick="checkForAIPickaxe()" style="right:0;position: absolute;" class="nes-btn">BUY</button></p>
+        <img src="./assets/aipickaxe.png" id="ap" style="position: absolute;top:100%; height:70px;display:none;">
+        <p style="top:40%; position: absolute; left:30%;display:none" id="irptxt"><b>Iron Pickaxe - <img src="./assets/catcoin1.png" height="15px">1,000</b><br>The second pickaxe that Cat Miner made. He was getting better at making pickaxes and even mined the iron himself.   
+        <button class="buy" id="irp-btn" style="position: absolute;right:0;display:none;" onclick="checkForIronPickaxe()" class="nes-btn">BUY </button></p>
+        <img src="./assets/iron_pickaxe.png" id="irp" style="position: absolute;top:40%; height:70px;display:none;">
+        <p style="top:60%; position: absolute; left:30%;display:none;"id="gptxt"><b>Gold Pickaxe - <img src="./assets/catcoin1.png" height="15px">1,000,000</b><br>Makes 25k catcoin per second. Cat Miner was getting plenty of income at this point.<button style="position: absolute;right:0;"class="buy" id="gold_pickaxe-btn"onclick="checkForGoldPickaxe()">BUY</button></p>
+        <img src="./assets/gold_pickaxe.png" id="gp" style="position: absolute;top:60%; height:70px;display:none;">
+        <p style="top:80%; position: absolute; left:30%;display:none;"id="bgptxt"><b> Baguette Pickaxe - <img src="./assets/catcoin1.png" height="15px">5,000,000</b><br>The superior Baguette Pickaxe was said to be imported straight from France. <br>This pickaxe gets you 50k catcoin per second. Just... don't eat it.<button class="buy" id="bgp-btn" onclick="cfbgp()" style="left:100%;position: absolute;">BUY</button></p>
+        <img src="./assets/baguettepick.png" id="bgp" style="position: absolute;top:80%; height:70px;display:none;">
+    </div>
+</div>
+<button id="settingsbtn" onclick="showSettings()"><span class="material-symbols-outlined">
+    settings
+    </span></button>
+    <span style="bottom:0;left:0;position: absolute;" id="update">Cat Miner 0.2.8 (wow the game looks better)</span>
+</body>
+<script src="script.js"></script>
+
+</html>
