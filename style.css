@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Ubuntu:wght@500&display=swap');
+h1 {
+    font-family:Ubuntu;
+    position: absolute;
+    top:10%; 
+    left:40%;
+    font-size:45px;
+}
+#btn1{
+    position: absolute;
+    top:50%;
+    left:20%;
+    height:70px;
+    width:190px;    
+}
+#btn2{
+    position: absolute;
+    top:50%;
+    left:60%;
+    height:70px;
+    width:190px;    
+}
+body {
+    background:url(./game/assets/bg.png);
+    animation: marquee 30s infinite linear;
+    background-repeat: repeat;
+    background-size:40px;
+}
+@keyframes marquee {
+    0% {
+      background-position: 0;
+    }
+  
+    100% {
+      background-position: -1190px;
+    }
+  }
