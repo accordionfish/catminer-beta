@@ -1,260 +1,441 @@
-var gp = document.getElementById("gp");
-var gptxt = document.getElementById("gptxt");
-var irp = document.getElementById("irp");
-var irptxt = document.getElementById("irptxt");
-var aipbtn = document.getElementById("aip-btn");
-var gpbtn = document.getElementById("gold_pickaxe-btn");
-var irpbtn = document.getElementById("irp-btn");
-var bgpbtn = document.getElementById("bgp-btn");
-var bgep = document.getElementById("bgp");
-var bgptxt = document.getElementById("bgptxt");
-var ap = document.getElementById("ap");
-var aptxt = document.getElementById("aptxt");
-var ms1 = new Audio("./sounds/mine1.wav");
-var ms2 = new Audio("./sounds/mine2.wav");
-var plusamt = document.getElementById("plusamt");
-var elem = document.getElementById("cash");
-var cat = $("#cat");
-var ore = document.getElementById("ore");
-var cmtitle= document.getElementById("title")
-var pickaxe = document.getElementById("pickaxe");
-var aipickaxe = "notbought";  
-var upcontent = document.getElementById("up1-content")
-if(Cookies.get("money") !== "NaN"){window.money = parseInt(Cookies.get("money"));} else {window.money=0;}
+//no ternary operators used, jk except for a few
+let loader = document.getElementById('loader');
+let i = 0;
 
-/*
+window.onload = () => {
+    setTimeout(()=>{
+    loader.style.display='none';
 
-
-
-   /\____/\    
-  |  .  .  |_________
-   \   ▾  /           \
-    |                  \
-     \________________  \
-         ____________/  /
-         \_____________/
-
-
-If you can see this cat and don't cheat, this cat will be happy
-
-
-
-
-*/
-function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },1900)
 }
-var aipButton = document.getElementById("aip-btn");
-var zo = setInterval(function() {money += 5; plusamt.innerHTML = "+<img src='./assets/catcoin1.png' height='15px'>5";setTimeout(function(){plusamt.innerHTML = "&nbsp;";},800);}, 1000)
-var z = setInterval(function() {elem.innerHTML = "<img src='./assets/catcoin1.png' height='15px'>" + numberWithCommas(money);bgc(); Cookies.set("money",money);upc();if(isNaN(money)){window.money=0}else{console.log("savedata found :>")}}, 99);
-if(Cookies.get("activepick")!==["gold","baguette","iron"]){
-  Mousetrap.bind('space', function() { 
-      money += 10;
-        plusamt.innerHTML="+<img src='./assets/catcoin1.png' height='15px'>10";
-        pickaxe.style.animation = 'none';
-        pickaxe.offsetHeight; /* trigger reflow */
-        pickaxe.style.animation = null; 
-        ms1.play();
-  },'keyup');
+const pickaxes = ["rusty","iron","gold","steel","pickaxe","baguette","snail","eiffeltower","glitchy"];
+const places = ["cave","paris"/* there are plans to add more for sure */];
+const cats = ["original","butterscotch","hearts","sochi"];
+const ores = ["coal","beignet"/*  same thing here, just putting a placeholder */]
+const pick_src = { 
+    'rusty': './assets/rusty_pick.png',
+    'iron': './assets/iron_pick.png',
+    'gold': './assets/gold_pick.png',
+    'pickaxe': './assets/pickaxe_pick.png',
+    'steel': './assets/steel_pick.png',
+    'baguette': './assets/baguette_pick.png',
+    'snail':'./assets/snail_pick.png',
+    'eiffeltower':'./assets/eiffeltower_pick.png',
+    'glitchy': './assets/aipickaxe.png'
+};
+const ore_src = {
+    "cave":"./assets/coal1.png",
+    "paris":"./assets/beignet.png"
+}
+const pick_prices = {
+    'iron': 5000,
+    'gold': 15000,
+    'pickaxe': 250000,
+    'steel':1000000,
+    'baguette':7000000,
+    'snail':40000000,
+    'eiffeltower':75000000,
+    'glitchy':2222225828528528
+};
+const ccperpick = {
+    'rusty':50,
+    'iron':100,
+    'gold':4000,
+    'pickaxe':40000,
+    'steel':80000,
+    'baguette':300000,
+    'snail':1000000,
+    'eiffeltower':750000000,
+    'glitchy':5702671010111001
+}
+const dialog_lines = {
+    "Mr. Loaf": ["Welcome to my shop!","This is the "+pickaxes[pickaxes.indexOf(localStorage.getItem("activepick"))+wow]+" Pickaxe.","Would you like to buy it?","Here you go, a new shiny pickaxe!", "Ok, have a good day!","It looks like you already have this pickaxe.","My shelf is full right now.", "It looks like you don't have enough catcoins.\n Thanks anyway!"],
+    "Pilot Bob": ["Welcome everyone to the When Cats Fly Airport!","Today, we have a flight to "+places[wow]+"!","It looks like you don't have a ticket. Would you like to buy one?","Thanks for your business!","Were you looking for a different flight? You can reuse old tickets.","Attention! We are now boarding!","Alright folks, enjoy your flight!", "Thanks for flying When Cats Fly Airlines!"]
+}
+const pick_places = {
+    "iron":"cave",
+    "gold":"cave",
+    "pickaxe":"cave",
+    "steel":"cave",
+    "baguette":"paris",
+    "snail":"paris",
+    "eiffeltower":"paris",
+    "glitchy": "cativerse"
+}
+const place_img = {
+    "cave":"./assets/cavebg.png",
+    "paris":"./assets/parisbg.png"
+}
+const minig_img = {
+    "cave":"./assets/hmmmmm.png",
+    "paris":"./assets/hmmmmm.png"
+}
+const ticket_prc = {
+    "paris":10000000
+}
+var wow;
+//get the ids of everything needed to be referred to
+const dialog_el = document.getElementById("line")
+const cc_el = document.getElementById("catcoins");
+const pick_el = document.getElementById("pick");
+const shop_el = document.getElementById("shop");
+const shop_window = document.getElementById("shop_ctr");
+const shop_pick = document.getElementById("shop-pick");
+const buy_btn = document.getElementById("buy");
+const cat = document.getElementById("cat");
+const place_el = document.getElementById("place");
+const dialog = document.getElementById("dialog");
+const dg_person = document.getElementById("person");
+const dg_action = document.querySelector("#action");
+const dg_options = document.querySelector("#options");
+const o1 = document.querySelector("#ac1");
+const o2 = document.querySelector("#ac2");
+const travel = document.querySelector("#travel");
+const travel_ctr = document.querySelector("#trvl-menu");
+const trvl_place = document.querySelector("#place");
+const trvl_mg = document.querySelector("#minigame");
+const trvl_mgimg = document.querySelector("#mini_img");
+const trvl_img = document.querySelector("#place-img");
+const trvl_visit = document.querySelector("#visit");
+const airport = document.querySelector("#airport");
+const pilotbob = document.querySelector("#pilot")
+const ore = document.querySelector("#ore")
+const pick1 = document.getElementById("pick1");const pick2=document.getElementById("pick2");const pick3 = document.getElementById("pick3");const pick4 = document.getElementById("pick4");
+var activePlace;
+var activePick;
+var activeCat;
+var catcoins;
+var boughtpicks = ["rusty"];
+var visitedplaces = []
+var ccpm; /*(catcoins per mine) */
+var as_place;
+//e
+console.log("are you a developer?? cause if u try to cheat then cat miner will be iuwheiunhfwfn.")
+//load the saved pickaxe
+//coulda used a switch statement but whatever
+if(localStorage.getItem("activepick") === 'undefined' | null){
+    //pretty self-explanatory
+    console.log("%c no saved pickaxe found,starting new game.","font-family:sans-serif");
+    var activePick = pickaxes[0];
+    localStorage.setItem("activepick",activePick)
+    var catcoins = 0;
+    var ccpm = 5;
+    visitedplaces[0]="cave";
+} else if(pickaxes.includes(localStorage.getItem("activepick"))){
+    //since the saved pickaxe is an item in that array, just set the active pickaxe to the saved value.
+    var activePick = localStorage.getItem("activepick");
+    var catcoins = parseInt(localStorage.getItem("catcoins"));
+    var activePlace=localStorage.getItem('activeplace');
+    var visitedplaces = JSON.parse(localStorage.getItem("visitedplaces"));
+    console.log("%c found a saved pickaxe.","color:green; font-family:sans-serif;")
+
+} else if(!localStorage.getItem("activepick")) {
+    console.log("%c no saved pickaxe found,starting new game.","font-family:sans-serif");
+    var activePick = pickaxes[0];
+    localStorage.setItem("activepick",activePick)
+    var catcoins = 0;
+    var ccpm = 5;
+    var activePlace = places[0];
+    visitedplaces[0]="cave";
+
+} else{
+    alert('error! please look in the log and report the bug on github!')
+}
+//set the active catcoins per mine
+if(localStorage.getItem("ccpm")){
+    var ccpm = parseInt(localStorage.getItem("ccpm"));
 } else {
-  console.log("pickaxe is not copper")
+    var ccpm = 5;
 }
-if(Cookies.get("activepick") == "iron"){clearInterval(zo);IP_Interval()}else{console.log("other pickaxe, doing other stuff")}
-if(Cookies.get("activepick")=="gold"){GP_Interval()} else { console.log("e")}
-if(Cookies.get("activepick")=="baguette"){bgp();} else { console.log("e")}
+if(localStorage.getItem("boughtpicks")){
+    var boughtpicks = localStorage.getItem("boughtpicks")
+} else {
+    //just so that you can't really buy the first one yaknow
+    var boughtpicks = ["rusty"];
+}
+function hide(el){
+    document.getElementById(el).style.display="none";
+}
+//save the game every 0.1 seconds
+let saveInterval = setInterval(() => {
+    localStorage.setItem("activepick",activePick);
+    localStorage.setItem("activecat",activeCat);
+    localStorage.setItem("activeplace",activePlace);    
+    localStorage.setItem("catcoins",catcoins);
+    localStorage.setItem("ccpm",ccpm)
+    localStorage.setItem("boughtpicks",boughtpicks);
+    localStorage.setItem("visitedplaces",JSON.stringify(visitedplaces))
+    //set the catcoins element to be the amount of catcoins
+    cc_el.innerHTML = "<img src='./assets/catcoin1.png' height='30px' style='vertical-align:middle'>" + numeral(catcoins).format('0.0a');
+},100)
+//load the pickaxe
+pick_el.src = pick_src[activePick];
+//load the ore
+activePlace ? ore.src=ore_src[activePlace] : ore.src=ore_src["cave"];
+//load the background
+activePlace ? document.body.style.backgroundImage="url("+place_img[activePlace]+")" : document.body.style.backgroundImage="url("+place_img["cave"]+")";
+visitedplaces[places.indexOf(activePlace)] ? console.log('you are in the cave'): visitedplaces[places.indexOf(activePlace)] = places[activePlace]   
+visitedplaces[places.indexOf(activePlace)]=places[places.indexOf(activePlace)]
 
-$(function(){
-  $("#ugp1-launcher, #ugp1-background, #ugp1-close").click(function() {
-      $("#ugp1-content, #ugp1-background").toggleClass("active");
-  });
+//since the baguette's scaling is wonky, and da pickaxe is of large size, change the size to fit the other pickaxes.
+if(localStorage.getItem("activepick")==='baguette'){
+    pick_el.style.height="128px";
+    //just to clarify 
+    console.log('%c pickaxe is baguette!!! wow!!!',"color:orange; font-family:sans-serif;");
+} else {
+        console.log('wow')
+}
+//steal the eiffel tower (hehehe haw)
+if(activePick==="eiffeltower"){
+    document.body.style.backgroundImage = "url(./assets/parisbg_hm.png)";
+}
+//set the spacebar to mine 
+Mousetrap.bind('space',(e) =>{
+    if(!e.repeat){
+    catcoins +=ccpm;
+    pick_el.style.animation = 'none';
+    pick_el.offsetHeight;
+    pick_el.style.animation = null;
+    } else {
+        return; 
+    }
+    
+if(activePick === "snail"){
+    pick_el.src="./assets/snail_pick1.png";
+    pick_el.onanimationend=()=>{
+        pick_el.src=pick_src["snail"];
+    }
+} else {
+    console.log("pickaxe is not larry");
+    pick_el.onanimationend=()=>{/* doot dee doot*/}
+}
+},'keydown')
+
+function right() {
+    //if da thing that you know you shuffle through pickaxes and stuff is not more than the amount of array
+    if(!(i + 6 > Object.keys(pickaxes).length)  && visitedplaces.includes(pick_places[pickaxes[i+5]])){
+     /* 6 because ya know like the 0th index in an array and youre adding 4 to the i variable and stuff*/
+    i += 1;
+    pick1.src = pick_src[pickaxes[i + 1]];
+    pick2.src = pick_src[pickaxes[i + 2]];
+    pick3.src = pick_src[pickaxes[i + 3]];
+    pick4.src = pick_src[pickaxes[i + 4]];
+    } else {
+        dialog.style.display = 'flex';
+        dialog_el.innerText = dialog_lines["Mr. Loaf"][6]
+
+    }
+}
+function left() {
+    if(i - 1 !== -2){
+        i -=1;
+    pick1.src = pick_src[pickaxes[i + 1]];
+    pick2.src = pick_src[pickaxes[i + 2]];
+    pick3.src = pick_src[pickaxes[i + 3]];
+    pick4.src = pick_src[pickaxes[i + 4]];
+    } else {
+        dialog.style.display = 'flex';
+        dialog_el.innerText = dialog_lines["Mr. Loaf"][6]
+    }
+}
+function buyPick(pick, pick_id){
+    if(catcoins >= pick_prices[pick] && !boughtpicks.includes(pick)){
+    //you have less moolah
+    catcoins -= pick_prices[pick];
+    //render the pickaxe
+    pick_el.src = pick_src[pick];
+    //set da active pickaxe to the right active pickaxe and ya dah ya dah ydaafuywgefhf
+    activePick=pick;
+    //the pickaxe wants to be stronger 
+    ccpm = ccperpick[pick];
+    //you have bought the pickaxe
+    boughtpicks[pick_id] = pick;
+    } else if(boughtpicks.includes(pick)){
+        //you have already bought this pick
+        buy_btn.disabled = true;
+    } else {
+        return 'not enough money'
+        }
+    //since baguette has wonky scaling set it to correct size :)
+    if(activePick ==='baguette'){
+        pick_el.style.height="128px";
+        //just to clarify 
+        console.log('%c pickaxe is baguette!!! wow!!!',"color:orange; font-family:sans-serif;");
+    }
+    if(pick==="snail" && !(boughtpicks.includes(pick))){
+        alert("NOTICE:\nthe snail(larry) agreed to be a pickaxe. \nNo snails are to be harmed in the mining of this ore.")
+    } else {
+        console.log("pickaxe is not larry")
+    }
+    if(pick==="eiffeltower" && !(boughtpicks.includes(pick)) && activePlace === "paris"){
+        document.body.style.backgroundImage = "url(./assets/parisbg_hm.png)";
+    } else {
+        document.body.style.backgroundImage = "url("+place_img[activePlace]+")";
+    }
+}
+function viewPick(e){
+    dg_options.style.display = 'none';
+    hide('shop-pick')
+    dialog_lines["Mr. Loaf"][1] = "This is the "+pickaxes[e][0].toUpperCase() + pickaxes[e].slice(1)+" Pickaxe, which costs "+numeral(pick_prices[pickaxes[e]]).format("0.0.a")+" catcoins.";
+    shop_pick.style.display="inline";
+    dialog.style.display="flex";
+    shop_pick.src = pick_src[pickaxes[e]];
+    dialog_el.innerText = dialog_lines["Mr. Loaf"][1];
+    dg_action.onclick = () => {
+        dialog_el.innerText = dialog_lines["Mr. Loaf"][2];
+        dg_action.innerText = "▲";
+        dg_action.onclick = () => {
+        dg_options.style.display = 'block';
+    }}
+    o1.onclick = () => {
+        if(boughtpicks.includes(pickaxes[e])){
+            //you have already bought this pick
+        dg_action.innerText = "▶";
+        dg_action.onclick = () => {hide('dialog')}
+        hide('shop-pick');
+        hide('options');
+        dialog_el.innerText = dialog_lines["Mr. Loaf"][5];
+        console.log('works properly')
+        } else if(!(buyPick(pickaxes[e],e) === 'not enough money')){
+        buyPick(pickaxes[e],e);
+        hide('options');
+        console.log('bought pickaxe');
+        dg_action.innerText = "▶";
+        dg_action.onclick = () => {hide('dialog')}
+        dialog_el.innerText = dialog_lines["Mr. Loaf"][3]
+        } else {
+            hide('options')
+            dialog_el.innerText = dialog_lines["Mr. Loaf"][7];
+            dg_action.innerText = "▶";
+            dg_action.onclick = () => {hide('dialog')}
+            
+        }
+    }
+    o2.onclick = () => {
+        dialog_el.innerText = dialog_lines["Mr. Loaf"][4]
+        hide('options');
+        dg_action.innerText = "▶";
+        dg_action.onclick = () => {hide('dialog')}
+    }
+
+}
+//when the button for the shop is clicked open it
+shop_el.addEventListener('click', () => {
+    console.log("opening shop..");
+    shop_window.style.display="inline";
+    if(pickaxes[pickaxes.indexOf(localStorage.getItem("activepick")) !== undefined | null]){
+    pick1.src = pick_src[pickaxes[i + 1]];
+    pick2.src = pick_src[pickaxes[i + 2]];
+    pick3.src = pick_src[pickaxes[i + 3]];
+    pick4.src = pick_src[pickaxes[i + 4]];
+    } else {
+        console.error("pickaxe is not in range.");
+    }
+    setTimeout(() => {dialog.style.display="flex";},200);
+    dialog_el.innerText = dialog_lines["Mr. Loaf"][0];
+    dg_person.innerText = Object.keys(dialog_lines)[0];
+    dg_action.innerText = "▶";
+    dg_action.onclick = function(){hide('dialog')}
+
 });
-$(function(){
-  $("#up1-background, #up1-close").click(function() {
-      $("#up1-content, #up1-background").toggleClass("active");
-  });
-});
-function bgc() {
-  if(Cookies.get("travelTicket") !=="1"){
-    document.body.classList.add("cave");
-    elem.style="color:white;" 
-    cmtitle.style="color:white;" 
-    plusamt.style="color:white;" 
+if(localStorage.getItem("activepick") === 'glitchy') {
+    if(localStorage.getItem("hm") === 'no'){
+    var e1 = setInterval(() => {pick_el.style.animationPlayState = "running"},100)
+    var e2 = setInterval(() => {pick_el.style.animationPlayState = "paused";catcoins+=1412222228471248;},90)
+    var e3 = setInterval(() => {pick_el.style.top =  Math.floor(    Math.random() * 500)+"px";catcoins+=1412847222221248;},120)
+    var e4 = setInterval(() => {pick_el.style.left = Math.floor(Math.random() * 1000 - 220)+"px"},110);
+    } else if(prompt("if you are prone to seizures, then type 'yes'. otherwise , enjoy the glitchyness.") !== 'yes' | 'Yes' | 'yEs' | 'YeS' | 'yES' | 'YES'){
+        var e1 = setInterval(() => {pick_el.style.animationPlayState = "running"},100)
+        var e2 = setInterval(() => {pick_el.style.animationPlayState = "paused";catcoins+=1412222228471248;},90)
+        var e3 = setInterval(() => {pick_el.style.top =  Math.floor(220 - Math.random() * 500)+"px";catcoins+=1412847222221248;},120)
+        var e4 = setInterval(() => {pick_el.style.left =  Math.floor(Math.random() * 1000 -220)+"px"},110);
+    localStorage.setItem("hm",'no')
 
-  } else {
-    document.body.classList.toggle("paris");
-  }
+    }
+  else {
+    clearInterval(e1)
+    clearInterval(e2)
+    clearInterval(e3)
+    clearInterval(e4)
+
+    var activePick = 'glitchy';
+    pick_el.src = pick_src[activePick]
+    localStorage.setItem("hm","yes")
 }
-function upc(){
-  if(money > 1000){
-    irp.style.display = "inline";
-    irptxt.style.display = "inline";
-    irpbtn.style.display="inline";
-   } else {
-    return false
-  }
-  if(money > 1005 && Cookies.get("modal1alrshown") != "yep"){
-    upcontent.innerHTML = "<div id='up1-close'>To exit, click on cat</div><h1 style='text-align:center;'>New Pickaxe Availible!</h1><img src='./assets/iron_pickaxe.png' height='120px'>Iron Pickaxe"
-    $("#up1-content, #up1-background").toggleClass("active");
-    Cookies.set("modal1alrshown","yep");
-  }
-  if(money > 1000000){
-    gp.style.display = "inline";
-    gptxt.style.display = "inline";
-    gpbtn.style.display="inline"
+} else {
+    console.log("pickaxe is not glitched")
+}
 
-  } else {
-    return false;
-  }
-  if(money > 1000005 && Cookies.get("modal2alrshown") != "yep"){
-    upcontent.innerHTML = "<div id='up1-close'>To exit, click on cat</div><h1 style='text-align:center;'>New Pickaxe Availible!</h1><img src='./assets/gold_pickaxe.png' height='120px'>Gold Pickaxe"
-    $("#up1-content, #up1-background").toggleClass("active");
-    Cookies.set("modal2alrshown","yep");
-  }
-  if(money > 5000000){
-    bgep.style.display = "inline";
-    bgptxt.style.display = "inline";
-    bgpbtn.style.display="inline";
-  } else {
-    return false;
-  }
-  if(money > 5000005 && Cookies.get("modal3alrshown") != "yep"){
-    upcontent.innerHTML = "<div id='up1-close'>To exit, click on cat</div><h1 style='text-align:center;'>New Pickaxe Availible!</h1><img src='./assets/baguettepick.png' height='120px'>Baguette Pickaxe<br>And you got a <br><h3>Travel Ticket<img src='./assets/travelticket.png' height='20px'></h3>"
-    $("#up1-content, #up1-background").toggleClass("active");
-    Cookies.set("modal3alrshown","yep");
-    Cookies.set("travelTicket","1");
+travel.addEventListener("click",() => {
+    travel_ctr.style.display = "block";
+    trvl_place.innerText = activePlace[0].toUpperCase() + activePlace.slice(1);
+    trvl_mg.value = activePlace;
+    trvl_mgimg.src = minig_img[places[places.indexOf(activePlace)]];
+    trvl_img.style.background = "url("+place_img[activePlace]+")";
+    trvl_img.style.backgroundRepeat = "repeat";
+    trvl_img.style.backgroundSize = "1000px 800px";
     
-  }
-  if(money > 100000000){
-    return true;
-  }
-}
-function checkForAIPickaxe(){
-  if(money > 100000000){
-    money -= 100000000;
-    pickaxe.src = "./assets/aipickaxe.png";
-    pickaxe.style.animationDuration = "0.1s";
-    AIInterval()
-    document.getElementById("aip-btn").disabled=true;
-    document.getElementById("aip-btn").innerText="OWNED";
-  } else {
-    alert("You don't have enough money.");
-  }
-}
-function AIInterval(){
-  document.getElementById("aip-btn").disabled=true;
-  document.getElementById("aip-btn").innerText="OWNED";
-  var q = setInterval(function() {money += 10000000000000005; plusamt.innerHTML = "+<img src='./assets/catcoin1.png' height='15px'>10000000000000005";setTimeout(function(){plusamt.innerHTML = "&nbsp;";},800);}, 1000)
-  Mousetrap.bind('space', function() {  
-        money += 10000000000000;
-        plusamt.innerHTML = "+10 Trillion";
-        pickaxe.style.animation = 'none';
-        pickaxe.offsetHeight; /* trigger reanimate */
-        pickaxe.style.animation = null; 
-        pickaxe.style.animationDuration = "0.1s";
-      },'keyup')
-}
-function checkForIronPickaxe(){
-  // something smoething something something
-  /*                         _
-                            / /
-  /\__/\                  / /
- | •  • |________________| |
-  ---                      /
-      ___________________/
-  
-  
-  */
-      if(money > 1000){
-        money -= 1000;
-        IP_Interval();
+})
+trvl_visit.addEventListener("click",() => {
+    airport.style.display="block";
+    airport.src='./assets/airport.jpg';
+    pilotbob.style.display="block";
+    pilotbob.src = "./assets/pilotbob-1.png"
+    airport.hidden=false;
+    if(window.innerHeight!==window.screen.height){
+        pilotbob.style.top="30%"
+    }
+    setTimeout(() => {var dng = new Audio("./assets/ding.mp3");dng.volume=0.25;dng.play();
+    dialog.style.display="flex";
+    dialog_el.innerText = dialog_lines["Pilot Bob"][0];
+    dg_person.innerText = "Pilot Bob";
+    dg_action.innerText="▶";
+    dialog_lines["Pilot Bob"][1] = "Today, we have a flight to "+places[places.indexOf(localStorage.getItem("activeplace"))+1].charAt(0).toUpperCase()+places[places.indexOf(localStorage.getItem("activeplace"))+1].slice(1)+"!";
+    dg_action.onclick=() => {
+        if(localStorage.getItem("visitedplaces").includes(places[0])){
+        dialog_el.innerText=dialog_lines["Pilot Bob"][1];
+        dg_action.onclick=() =>{
+        dialog_el.innerText=dialog_lines["Pilot Bob"][2];
+        dg_options.style.display="block";
+        dg_action.innerText = "▲";
+        o1.onclick=()=>{
+            if(catcoins >= ticket_prc[places[places.indexOf(activePlace)+1]]){
+            dialog_el.innerText=dialog_lines["Pilot Bob"][3];
+            hide("options");
+            dg_action.onclick = () => {
+                dng.play()
+                dialog_el.innerText=dialog_lines["Pilot Bob"][5];
+                catcoins-=ticket_prc[places[places.indexOf(activePlace)+1]]
+                dg_action.innerText = "▶";
+                dg_action.onclick=()=>{var activePlace=places[places.indexOf(activePlace)+1];visitedplaces[places.indexOf(activePlace)]=places[places.indexOf(activePlace)];clearInterval(saveInterval);localStorage.setItem("activeplace",places[places.indexOf(activePlace)+1]);location.reload()}
+                
+            } 
 
-      } else {
-        alert("You don't have enough money.");
-      }
-}
-function IP_Interval(){
-  pickaxe.src = "./assets/iron_pickaxe.png";
-  pickaxe.style.animationDuration = "2.7s";
-  clearInterval(zo);
-  document.getElementById("irp-btn").disabled=true;
-  document.getElementById("irp-btn").innerText="OWNED";
-  window.int1q = setInterval(function() {money += 5000; plusamt.innerHTML = "+<img src='./assets/catcoin1.png' height='15px'>5,000";setTimeout(function(){plusamt.innerHTML = "&nbsp;";},800);}, 1000)
-  pickaxe.src = "./assets/iron_pickaxe.png";
-  pickaxe.style.animationDuration = "2.7s";
-  Cookies.set("activepick","iron")
-  Mousetrap.bind('space', function() {
-    
-        money += 8000;
-        plusamt.innerHTML = "+<img src='./assets/catcoin1.png' height='15px'>8,000";
-        pickaxe.style.animation = 'none';
-        pickaxe.offsetHeight; /* trigger reanimate */
-        pickaxe.style.animation = null; 
-        ms2.play();
+        } else if(catcoins!==ticket_prc[places[places.indexOf(activePlace)+1]] | catcoins<ticket_prc[places[places.indexOf(activePlace)+1]]){
+            console.log(ticket_prc[places[places.indexOf(activePlace)+1]]+" "+catcoins)
+            hide("options");
+            dialog_el.innerText="Sorry, but you can't buy a ticket with "+numeral(catcoins).format("0.0a")+" catcoins."
+            dg_action.onclick = () => {
+                dialog_el.innerText = "See you soon!";
+                dg_action.onclick=()=>{hide("dialog");hide("airport");hide("trvl-menu");}
+            }
+        }
+        }
+           o2.onclick=()=>{
+            dialog_el.innerText= "Alright, see you soon!";
+            hide("options")
+            dg_action.onclick=()=>{hide("airport");hide("dialog");hide("pilot");hide("options")}
+            }
+    }}}},1500);
+    }
+)
 
-  },'keyup');
+function eatborgir(){
+    console.log("you ate borgir. nothing happened.")
 }
-function checkForGoldPickaxe(){
-  if(money > 1000000){
-    money -= 1000000;
-
-    GP_Interval();
-  } else {
-    alert("You don't have enough money.");
-  }
-}
-function GP_Interval(){
-  pickaxe.src = "./assets/gold_pickaxe.png";
-  pickaxe.style.animationDuration = "2.7s";
-  document.getElementById("gold_pickaxe-btn").disabled=true;
-  document.getElementById("gold_pickaxe-btn").innerText="OWNED";
-  Cookies.set("activepick","gold");
-  clearInterval(window.int1q); 
-  window.g = setInterval(function() {money += 25000; plusamt.innerHTML = "+<img src='./assets/catcoin1.png' height='15px'>25,000";setTimeout(function(){plusamt.innerHTML = "&nbsp;";},800);}, 1000)
-    Mousetrap.bind('space', function(){
-        money += 15000;
-        plusamt.innerHTML = "+<img src='./assets/catcoin1.png' height='15px'>15,000";
-        pickaxe.style.animation = 'none';
-        pickaxe.offsetHeight; /* trigger reflow */
-        pickaxe.style.animation = null; 
-        ms1.play();
-        localStorage.setItem("money",money)
-    
-  },'keyup');
-}
-function cfbgp(){
-  if(window.money > 5000000){
-    money -= 5000000;
-    pickaxe.src = "./assets/baguettepick.png";
-    pickaxe.style.animationDuration = "2.7s";
-    bgp();
-    document.getElementById("bgp-btn").disabled=true;
-    document.getElementById("bgp-btn").innerText="OWNED";
-    Cookies.set("activepick","baguette");
-  } else {
-    alert("You don't have enough money.");
-  }
-}
-function bgp(){
-  gpbtn.innerText="OWNED";
-  gpbtn.disabled=true;
-  Cookies.set("activepick","baguette")
-  document.getElementById("irp-btn").disabled=true;
-  document.getElementById("irp-btn").innerText="OWNED";
-  document.getElementById("bgp-btn").disabled=true;
-  document.getElementById("bgp-btn").innerText="OWNED";
-  pickaxe.src = "./assets/baguettepick.png";
-  pickaxe.style.animationDuration = "2.7s";
-  clearInterval(window.g); 
-  window.c = setInterval(function() {money += 50000; plusamt.innerText = "+50k";setTimeout(function(){plusamt.innerHTML = "&nbsp;";},800);}, 1000)
-  Mousetrap.bind('space', function(){
-        money += 80000;
-        plusamt.innerHTML = "+<img src='./assets/catcoin1.png' height='15px'>80k";
-        pickaxe.style.animation = 'none';
-        pickaxe.offsetHeight; /* trigger reflow */
-        pickaxe.style.animation = null; 
-        ms1.play();
-},'keyup');
-} 
-if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
- alert("you are using mobile.  As of right now, Cat Miner is in BETA. when the full game releases, there will be a mobile app.")
+function del_data(){
+ //oh no the autosave its broken
+    clearInterval(saveInterval)
+    localStorage.clear()
+    window.location.reload();
 }
