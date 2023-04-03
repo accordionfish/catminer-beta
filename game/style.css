@@ -82,12 +82,12 @@ body {
     background: #0288D1;    
 }
 #shop_ctr {
-    border-radius: 10px;
     position: absolute;
     background:white;  
-    height:99vh;
-    width:99vw;
+    height:100vh;
+    width:100vw;
     top:0;
+    left:0;
     z-index:5;
     background:#FB8C00;
     background-size: 1200px;
@@ -165,7 +165,7 @@ body {
     left:0;
     position: absolute;
     width:100vw;
-    height:99vh;
+    height:100vh;
     background:black;
     z-index: 11;
     display: flex;
@@ -192,6 +192,7 @@ animation: spin2 2s;
 }
 .pick_rack_pick {
     height:128px;
+    image-rendering: pixelated;
 }
 #shelf {
     top:20vh;
@@ -362,6 +363,62 @@ noscript {
     left:0;
     color:white;
 }
+#shop2_ctr {
+    position: absolute;
+    background:white;  
+    height:100vh;
+    width:100vw;
+    top:0;
+    left:0;
+    z-index:5;
+    background:#a8a39d;
+    background-size: 1200px;
+    background-position-x: 15px;
+    background-position-y: 80px;
+    display: none;
+    animation-name:rollIn;
+    animation-duration: 0.4s;
+}
+#shop2 {
+    border:none;
+    box-shadow: 0 3px white;
+    border-radius: 5px;
+    background:#01579B;
+    color:white;
+    font-size: large;
+    font-family: "Noto Sans";
+    position:absolute;
+    right:20vw;
+    top:0;
+    margin:30px;
+    width:100px;
+    height:50px;
+}
+#shop2:hover {
+    background: #0288D1;    
+    
+}
+#shop2:active {
+    box-shadow: 0 2px white;
+    transform: translateY(4px);   
+}
+#sm {
+    position:absolute;
+    right:0;
+    margin:50px;
+}
+#boost-shelves {
+    position: absolute;
+    margin-left:10vw;
+    top: 2.5vh;
+    display: grid;
+    grid-gap: 5vh;
+}
+#left, #right, #left2, #right2 {
+    border:none;
+    background:rgb(164, 163, 172);
+}
+
 @keyframes spin2 {
     0% {
         transform: rotate(0deg);

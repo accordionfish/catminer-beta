@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- yes i was too lazy to do this stuff myself so I added cdns for them-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
     <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
@@ -36,7 +39,7 @@
         <img id="pilot">
         </div>
         <div id="place"></div>
-        <button id="minigame"><img id="mini_img" class="mini-img"><br>Play Minigame</button>
+        <button id="minigame" title="No minigames finished yet, minigames will come after 10 places are added."><img id="mini_img" class="mini-img"><br>Play Minigame<br></button>
         <button id="visit"><img height="100vh" src="./assets/airport_1.JPEG"><br>Visit Airport</button>
         <div id="place-img"></div>
         <button id="exit" onclick="hide('trvl-menu')">&times;</button>
@@ -66,7 +69,25 @@
         <button id="buy" onclick='buyPick(pickaxes[pickaxes.indexOf(localStorage.getItem("activepick")) + 1])'>BUY</button>
     </div>
     </div>
-    <div id="vername">0.4.1</div>
+    <button id="shop2">
+        <span class="material-icons" style="vertical-align:middle">bolt</span>Boosts
+    </button>
+    <div id="shop2_ctr">
+
+        <div id="close" onclick="hide('shop2_ctr');hide('dialog')" style="font-size:50px;font-weight:900;">&times;</div>
+        <img src="./assets/sign.png" alt="" id="shopsign">
+        <img src="./assets/sm.png" id="sm">
+        <div id="boost-shelves">
+            <button onclick="left()" id="right2">▲</button>
+            <img id="boost1" onclick="viewBoost(w )"class="pick_rack_pick"/>
+            <img id="boost2" onclick="viewBoost(w + 1)"class="pick_rack_pick"/>
+            <img id="boost3" onclick="viewBoost(w + 2)"class="pick_rack_pick"/>
+            <button onclick="right()" id="left2">▼</button>
+    
+        </div>
+        
+    </div>
+    <div id="vername" style="font-family: Archivo;">Cat Miner 0.4.1</div>
     <script src="./script.js"></script>
 </body>
 </html>

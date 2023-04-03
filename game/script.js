@@ -6,9 +6,12 @@ window.onload = () => {
     setTimeout(()=>{
     loader.style.display='none';
 
-    },1900)
+    },1400)
 }
-const pickaxes = ["rusty","iron","gold","steel","pickaxe","baguette","snail","eiffeltower","glitchy"];
+//audio stuff
+const accordion = new Audio("./assets/accord1.wav")
+const pickaxes = ["rusty","iron","gold","steel","pickaxe","baguette","accordion","snail","eiffeltower","glitchy"];
+const boosts = ["catnip","catgrass","cat Coffee"]
 const places = ["cave","paris"/* there are plans to add more for sure */];
 const cats = ["original","butterscotch","hearts","sochi"];
 const ores = ["coal","beignet"/*  same thing here, just putting a placeholder */]
@@ -21,11 +24,22 @@ const pick_src = {
     'baguette': './assets/baguette_pick.png',
     'snail':'./assets/snail_pick.png',
     'eiffeltower':'./assets/eiffeltower_pick.png',
+    "accordion":"./assets/accordion_pick.png",
     'glitchy': './assets/aipickaxe.png'
 };
 const ore_src = {
     "cave":"./assets/coal1.png",
     "paris":"./assets/beignet.png"
+}
+const boost_src = {
+    "catnip":"./assets/placeholder.gif",
+    "catgrass":"./assets/placeholder.gif",
+    "cat Coffee":"./assets/placeholder.gif"
+}
+const boost_prices = {
+    "catnip":5000000,
+    "catgrass":60000000,
+    "cat Coffee":150000000
 }
 const pick_prices = {
     'iron': 5000,
@@ -33,7 +47,8 @@ const pick_prices = {
     'pickaxe': 250000,
     'steel':1000000,
     'baguette':7000000,
-    'snail':40000000,
+    'accordion':40000000,
+    'snail':80000000,
     'eiffeltower':75000000,
     'glitchy':2222225828528528
 };
@@ -44,13 +59,15 @@ const ccperpick = {
     'pickaxe':40000,
     'steel':80000,
     'baguette':300000,
-    'snail':1000000,
+    'accordion':1000000,
+    'snail':2000000,
     'eiffeltower':750000000,
     'glitchy':5702671010111001
 }
 const dialog_lines = {
-    "Mr. Loaf": ["Welcome to my shop!","This is the "+pickaxes[pickaxes.indexOf(localStorage.getItem("activepick"))+wow]+" Pickaxe.","Would you like to buy it?","Here you go, a new shiny pickaxe!", "Ok, have a good day!","It looks like you already have this pickaxe.","My shelf is full right now.", "It looks like you don't have enough catcoins.\n Thanks anyway!"],
-    "Pilot Bob": ["Welcome everyone to the When Cats Fly Airport!","Today, we have a flight to "+places[wow]+"!","It looks like you don't have a ticket. Would you like to buy one?","Thanks for your business!","Were you looking for a different flight? You can reuse old tickets.","Attention! We are now boarding!","Alright folks, enjoy your flight!", "Thanks for flying When Cats Fly Airlines!"]
+    "Mr. Loaf": ["Welcome to my shop!","This is the "+pickaxes[pickaxes.indexOf(localStorage.getItem("activepick"))+wow]+" Pickaxe.","Would you like to buy it?","Here you go, a shiny new pickaxe!", "Ok, have a good day!","It looks like you already have this pickaxe. Would you like to equip it?","That's all in my collection for now.\n(hint:maybe try traveling somewhere new)","It looks like you don't have enough catcoins.\n Thanks anyway!","Alright, here you go!","Ok, feel free to check out any others!"],
+    "Pilot Bob": ["Welcome everyone to the When Cats Fly Airport!","Today, we have a flight to "+places[wow]+"!","It looks like you don't have a ticket. Would you like to buy one?","Thanks for your business!","Were you looking for a different flight? You can reuse old tickets.","Attention! We are now boarding!","Alright folks, enjoy your flight!", "Thanks for flying When Cats Fly Airlines!"],
+    "speedymetal":["Welcome to my store!",", great choice!","Thanks for shopping! \n Would you like to activate the boost?","Looks like you already bought this.\n Want to activate it?"]
 }
 const pick_places = {
     "iron":"cave",
@@ -58,6 +75,7 @@ const pick_places = {
     "pickaxe":"cave",
     "steel":"cave",
     "baguette":"paris",
+    "accordion":"paris",
     "snail":"paris",
     "eiffeltower":"paris",
     "glitchy": "cativerse"
@@ -67,13 +85,14 @@ const place_img = {
     "paris":"./assets/parisbg.png"
 }
 const minig_img = {
-    "cave":"./assets/hmmmmm.png",
-    "paris":"./assets/hmmmmm.png"
+    "cave":"./assets/placeholder.gif",
+    "paris":"./assets/placeholder.gif"
 }
 const ticket_prc = {
     "paris":10000000
 }
 var wow;
+var w = 0;
 //get the ids of everything needed to be referred to
 const dialog_el = document.getElementById("line")
 const cc_el = document.getElementById("catcoins");
@@ -98,17 +117,22 @@ const trvl_mgimg = document.querySelector("#mini_img");
 const trvl_img = document.querySelector("#place-img");
 const trvl_visit = document.querySelector("#visit");
 const airport = document.querySelector("#airport");
+const shop2_btn = document.querySelector("#shop2");
 const pilotbob = document.querySelector("#pilot")
 const ore = document.querySelector("#ore")
+const shop2 = document.querySelector("#shop2_ctr")
 const pick1 = document.getElementById("pick1");const pick2=document.getElementById("pick2");const pick3 = document.getElementById("pick3");const pick4 = document.getElementById("pick4");
-var activePlace;
+const boost1 = document.querySelector("#boost1");const boost2 = document.querySelector("#boost2");const boost3 = document.querySelector("#boost3");
+var activePlace; 
 var activePick;
 var activeCat;
+
 var catcoins;
-var boughtpicks = ["rusty"];
-var visitedplaces = []
+var boughtpicks = [];
+var visitedplaces = [];
 var ccpm; /*(catcoins per mine) */
 var as_place;
+var special_func = function(){};
 //e
 console.log("are you a developer?? cause if u try to cheat then cat miner will be iuwheiunhfwfn.")
 //load the saved pickaxe
@@ -148,10 +172,9 @@ if(localStorage.getItem("ccpm")){
     var ccpm = 5;
 }
 if(localStorage.getItem("boughtpicks")){
-    var boughtpicks = localStorage.getItem("boughtpicks")
+    var boughtpicks = JSON.parse(localStorage.getItem("boughtpicks"))
 } else {
-    //just so that you can't really buy the first one yaknow
-    var boughtpicks = ["rusty"];
+    //ee
 }
 function hide(el){
     document.getElementById(el).style.display="none";
@@ -163,7 +186,7 @@ let saveInterval = setInterval(() => {
     localStorage.setItem("activeplace",activePlace);    
     localStorage.setItem("catcoins",catcoins);
     localStorage.setItem("ccpm",ccpm)
-    localStorage.setItem("boughtpicks",boughtpicks);
+    localStorage.setItem("boughtpicks",JSON.stringify(boughtpicks));
     localStorage.setItem("visitedplaces",JSON.stringify(visitedplaces))
     //set the catcoins element to be the amount of catcoins
     cc_el.innerHTML = "<img src='./assets/catcoin1.png' height='30px' style='vertical-align:middle'>" + numeral(catcoins).format('0.0a');
@@ -189,6 +212,23 @@ if(localStorage.getItem("activepick")==='baguette'){
 if(activePick==="eiffeltower"){
     document.body.style.backgroundImage = "url(./assets/parisbg_hm.png)";
 }
+//make bad accordion playing noises while you mine
+if(activePick==="accordion"){
+    var special_func = ()=>{
+        accordion.currentTime=0;
+        accordion.play();
+        try {
+        pick_el.addEventListener("animationstart",()=>{pick_el.src="./assets/accordion_pick1.png"});
+        pick_el.addEventListener("animationend",()=>{
+            pick_el.src="./assets/accordion_pick.png";
+        })
+        } catch(e){
+            accordion.addEventListener("audio")
+            alert(e)
+        }
+
+    }
+}
 //set the spacebar to mine 
 Mousetrap.bind('space',(e) =>{
     if(!e.repeat){
@@ -196,10 +236,11 @@ Mousetrap.bind('space',(e) =>{
     pick_el.style.animation = 'none';
     pick_el.offsetHeight;
     pick_el.style.animation = null;
+    special_func();
     } else {
-        return; 
+        console.log("you are holding down space? sorry that doesn't work anymore but here's a jerry \n 〽️\n🟡 wah"); 
     }
-    
+    //larry
 if(activePick === "snail"){
     pick_el.src="./assets/snail_pick1.png";
     pick_el.onanimationend=()=>{
@@ -249,10 +290,14 @@ function buyPick(pick, pick_id){
     //the pickaxe wants to be stronger 
     ccpm = ccperpick[pick];
     //you have bought the pickaxe
-    boughtpicks[pick_id] = pick;
+    try {
+    boughtpicks.push(pick);    
+    } catch(e) {
+        alert(e)
+    }
     } else if(boughtpicks.includes(pick)){
         //you have already bought this pick
-        buy_btn.disabled = true;
+
     } else {
         return 'not enough money'
         }
@@ -271,6 +316,9 @@ function buyPick(pick, pick_id){
         document.body.style.backgroundImage = "url(./assets/parisbg_hm.png)";
     } else {
         document.body.style.backgroundImage = "url("+place_img[activePlace]+")";
+    }
+    if(activePick==="accordion"){
+        accordion.play()
     }
 }
 function viewPick(e){
@@ -291,10 +339,10 @@ function viewPick(e){
         if(boughtpicks.includes(pickaxes[e])){
             //you have already bought this pick
         dg_action.innerText = "▶";
-        dg_action.onclick = () => {hide('dialog')}
-        hide('shop-pick');
+        dg_action.onclick = () => {dg_options.style.display="block";o1.onclick=()=>{activePick=pickaxes[e];dialog_el.innerText=dialog_lines["Mr. Loaf"][8];hide('options');pick_el.src=pick_src[pickaxes[e]];if(pick==="snail" && !(boughtpicks.includes(pick))){ alert("NOTICE:\nthe snail(larry) agreed to be a pickaxe. \nNo snails are to be harmed in the mining of this ore.") } else { console.log("pickaxe is not larry") } if(activePick==="eiffeltower" && !(boughtpicks.includes(pick)) && activePlace === "paris"){ document.body.style.backgroundImage = "url(./assets/parisbg_hm.png)"; special_func=()=>{pick_el.onanimationstart=()=>{};pick_el.onanimationend=()=>{}} } else { document.body.style.backgroundImage = "url("+place_img[activePlace]+")"; } if(activePick==="accordion"){ accordion.play() }};o2.onclick=()=>{}}
         hide('options');
         dialog_el.innerText = dialog_lines["Mr. Loaf"][5];
+        
         console.log('works properly')
         } else if(!(buyPick(pickaxes[e],e) === 'not enough money')){
         buyPick(pickaxes[e],e);
@@ -306,9 +354,8 @@ function viewPick(e){
         } else {
             hide('options')
             dialog_el.innerText = dialog_lines["Mr. Loaf"][7];
-            dg_action.innerText = "▶";
-            dg_action.onclick = () => {hide('dialog')}
-            
+            dg_action.innerText = "▲";
+            dg_action.onclick=()=>{hide('dialog')}            
         }
     }
     o2.onclick = () => {
@@ -367,6 +414,7 @@ if(localStorage.getItem("activepick") === 'glitchy') {
 }
 
 travel.addEventListener("click",() => {
+    hide("pilot")
     travel_ctr.style.display = "block";
     trvl_place.innerText = activePlace[0].toUpperCase() + activePlace.slice(1);
     trvl_mg.value = activePlace;
@@ -376,21 +424,58 @@ travel.addEventListener("click",() => {
     trvl_img.style.backgroundSize = "1000px 800px";
     
 })
+
+
+shop2_btn.addEventListener("click",()=>{
+    shop2.style.display="block";
+    dg_person.innerText = "speedymetal";
+    dialog_el.innerText=dialog_lines["speedymetal"][0];
+    dialog.style.display="flex";
+    dg_action.innerText="▶";
+    dg_action.onclick=()=>{hide('dialog')}
+    boost1.src = boost_src[boosts[w]];
+    boost2.src = boost_src[boosts[w + 1]];
+    boost3.src = boost_src[boosts[w + 2]];
+    
+})
+function viewBoost(boost_id){
+    dialog.style.display="flex";
+    dialog_el.innerText= boosts[boost_id].charAt(0).toUpperCase() + boosts[boost_id].slice(1) + dialog_lines["speedymetal"][1];
+    dg_action.innerText="▲"
+    dg_action.onclick=()=>{dg_options.style.display="block";}
+}
+
+
 trvl_visit.addEventListener("click",() => {
+    //load images
     airport.style.display="block";
     airport.src='./assets/airport.jpg';
     pilotbob.style.display="block";
     pilotbob.src = "./assets/pilotbob-1.png"
+    //show the airport 
     airport.hidden=false;
+    //put mr bob into the right place
     if(window.innerHeight!==window.screen.height){
         pilotbob.style.top="30%"
     }
+    //ding sound that is in every airport announcement in the US
     setTimeout(() => {var dng = new Audio("./assets/ding.mp3");dng.volume=0.25;dng.play();
+    //load the dialog and make it do stuff
     dialog.style.display="flex";
     dialog_el.innerText = dialog_lines["Pilot Bob"][0];
     dg_person.innerText = "Pilot Bob";
     dg_action.innerText="▶";
-    dialog_lines["Pilot Bob"][1] = "Today, we have a flight to "+places[places.indexOf(localStorage.getItem("activeplace"))+1].charAt(0).toUpperCase()+places[places.indexOf(localStorage.getItem("activeplace"))+1].slice(1)+"!";
+    //the part where the glitch is
+    try {
+    if(typeof places[places.indexOf(localStorage.getItem("activeplace"))+1] === "undefined" | undefined | null){
+        dialog_lines["Pilot Bob"][6] = "Well, looks like you beat the game(as it is so far).\n To suggest features or report a bug go to the cat miner stuff document.\n ";
+        dialog_el.innerText = dialog_lines["Pilot Bob"][6]
+        dg_action.onclick=()=>{location.reload()}
+    } else {dialog_lines["Pilot Bob"][1] = "Today, we have a flight to "+places[places.indexOf(localStorage.getItem("activeplace"))+1].charAt(0).toUpperCase()+places[places.indexOf(localStorage.getItem("activeplace"))+1].slice(1)+"!";}
+    } catch(e){
+        alert(e)
+        dialog_lines["Pilot Bob"][6] = "Well, looks like you beat the game(as it is so far).\n To suggest features or report a bug go to the cat miner stuff document.\n ";
+    }
     dg_action.onclick=() => {
         if(localStorage.getItem("visitedplaces").includes(places[0])){
         dialog_el.innerText=dialog_lines["Pilot Bob"][1];
@@ -419,6 +504,10 @@ trvl_visit.addEventListener("click",() => {
                 dialog_el.innerText = "See you soon!";
                 dg_action.onclick=()=>{hide("dialog");hide("airport");hide("trvl-menu");}
             }
+        } else {
+            dialog_lines["Pilot Bob"][6] = "Well, looks like you beat the game(as it is so far).\n To suggest features or report a bug go to the cat miner stuff document.\n ";
+        dg_action.onclick=()=>{location.reload()}
+   
         }
         }
            o2.onclick=()=>{
@@ -426,6 +515,10 @@ trvl_visit.addEventListener("click",() => {
             hide("options")
             dg_action.onclick=()=>{hide("airport");hide("dialog");hide("pilot");hide("options")}
             }
+    if(typeof places[places.indexOf(localStorage.getItem("activeplace"))+1] === "undefined" | undefined | null){
+        dg_action.onclick=()=>{dg_options.style.display="block";o1.innerText="suggest feature/bug report";o2.innerText="go to cat miner stuff doc";o1.onclick=()=>{window.open("https://docs.google.com/forms/d/e/1FAIpQLSdLy7A08w0yase2p1Fs46aOVNgASPBwWEN-k7FV4Etssdxm-g/viewform")};o2.onclick=()=>{window.open("https://docs.google.com/document/d/1uDUJMTFPlbcwzbpFQFVxILnffG4DfFRKKgw_faGnuA4/edit")}}
+    }
+
     }}}},1500);
     }
 )
