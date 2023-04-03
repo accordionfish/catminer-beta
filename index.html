@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://unpkg.com/nes.css@latest/css/nes.min.css" rel="stylesheet" />
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./home.css">
     <title>Cat Miner</title>
 </head>
 <body>
-    <h1>Cat Miner</h1>
-    <button type="button" class="nes-btn is-primary" id="btn1" onclick="window.location.href='./game/'">Start Game</button>
-    <button type="button" class="nes-btn is-secondary" id="btn2" onclick="Cookies.remove('activepick');Cookies.remove('money');Cookies.remove('modal1alrshown');Cookies.remove('modal2alrshown');Cookies.remove('modal3alrshown');Cookies.remove('travelTicket')">Delete save</button>
-    <div id="news"></div>
+    <div id="wefw">
+    <img src="./cmlogo.png" id="logo" height="100px">
+    </div>
+    <div id="news">
+        <h1>0.4.1 coming soon!</h1>
+        - Featuring new pickaxes such as the snail pickaxe, the eiffel tower pickaxe, and the beret pickaxe!
+        <br><br>- Speedymetal's stop'n shop coming soon, which gives you boosts like catnip and catgrass.
+    </div>
+    <div id="buttons">
+        <button id="play" onclick="location.href='./game/';">Play</button>
+        <br>
+        <button id="options" onclick="/* oh no the autosave its broken */ localStorage.clear(); alert('save reset!');window.location.reload();" style="font-size:x-large">Reset Save</button>
+    </div>
 </body>
 </html>
